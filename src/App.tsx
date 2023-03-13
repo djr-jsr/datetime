@@ -1,6 +1,8 @@
 import { createContext, useMemo } from 'react';
 import { createTheme, ThemeProvider, responsiveFontSizes } from '@mui/material/styles';
 import { useMediaQuery, CssBaseline } from '@mui/material';
+import { LocalizationProvider } from '@mui/x-date-pickers';
+import { AdapterLuxon } from '@mui/x-date-pickers/AdapterLuxon';
 import ModeSelectorComponent from './Components/ModeSelectorComponent';
 import DateTime from './Components/DateTimeComponent';
 import useLocalStorage from './Hooks/useLocalStorage';
@@ -34,13 +36,15 @@ function App() {
     );
 
     return (
-        <ColorModeContext.Provider value={toggleColorMode}>
-            <ThemeProvider theme={theme}>
-                <CssBaseline />
-                <ModeSelectorComponent />
-                <DateTime />
-            </ThemeProvider>
-        </ColorModeContext.Provider>
+        <LocalizationProvider dateAdapter={AdapterLuxon}>
+            <ColorModeContext.Provider value={toggleColorMode}>
+                <ThemeProvider theme={theme}>
+                    <CssBaseline />
+                    <ModeSelectorComponent />
+                    <DateTime />
+                </ThemeProvider>
+            </ColorModeContext.Provider>
+        </LocalizationProvider>
     );
 }
 
