@@ -11,7 +11,7 @@ const ModeSelectorComponent: FC = () => {
     return (
         <Box
             sx={{
-                height: '9vh',
+                height: '10vh',
                 display: 'flex',
                 width: '100%',
                 alignItems: 'center',
