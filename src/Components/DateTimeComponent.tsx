@@ -64,7 +64,7 @@ const DateTimeComponent: FC = () => {
 
     return (
         <>
-            <Box sx={{ height: '90vh', display: 'flex', alignItems: 'center', paddingBottom: '10vh' }}>
+            <Box sx={{ height: '84vh', display: 'flex', alignItems: 'center', paddingBottom: '10vh' }}>
                 <Grid container direction='column' alignItems='center' justifyItems='center' spacing={5}>
                     <Grid item>
                         {

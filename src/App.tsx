@@ -4,7 +4,8 @@ import { useMediaQuery, CssBaseline } from '@mui/material';
 import { LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterLuxon } from '@mui/x-date-pickers/AdapterLuxon';
 import ModeSelectorComponent from './Components/ModeSelectorComponent';
-import DateTime from './Components/DateTimeComponent';
+import DateTimeComponent from './Components/DateTimeComponent';
+import FooterComponent from './Components/FooterComponent';
 import useLocalStorage from './Hooks/useLocalStorage';
 import '@fontsource/poppins';
 
@@ -41,7 +42,8 @@ function App() {
                 <ThemeProvider theme={theme}>
                     <CssBaseline />
                     <ModeSelectorComponent />
-                    <DateTime />
+                    <DateTimeComponent />
+                    <FooterComponent />
                 </ThemeProvider>
             </ColorModeContext.Provider>
         </LocalizationProvider>
