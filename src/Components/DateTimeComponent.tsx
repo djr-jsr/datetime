@@ -1,20 +1,57 @@
 import { FC, useState, useEffect } from 'react';
-import { Box, Typography, Grid, useTheme, FormControl, InputLabel, Input, IconButton, Select, MenuItem } from '@mui/material';
+import { Box, Typography, Unstable_Grid2 as Grid, useTheme, FormControl, InputLabel, Input, IconButton, Select, MenuItem, Theme } from '@mui/material';
 import { DateTime } from 'luxon';
 import { Edit, Save, Pause, PlayArrow, RestartAlt } from '@mui/icons-material';
 import { MobileDatePicker, MobileTimePicker } from '@mui/x-date-pickers';
 
-const fontStyle = {
-    fontFamily: 'Poppins',
+const displayFontStyle = (theme: Theme) => ({
     fontWeight: 'bold',
     input: { textAlign: 'center' }
-};
+});
 
-const labelStyle = {
+const labelStyle = (theme: Theme) => ({
     width: '100%',
     textAlign: 'center',
     transformOrigin: 'center'
-};
+});
+
+const inputFontStyle = (theme: Theme) => ({
+    fontWeight: 'bold',
+    input: {
+        textAlign: 'center',
+        fontSize: '2.2rem',
+        [theme.breakpoints.down('lg')]: {
+            fontSize: '2.0rem'
+        },
+        [theme.breakpoints.down('md')]: {
+            fontSize: '1.8rem'
+        },
+        [theme.breakpoints.down('sm')]: {
+            fontSize: '1.6rem'
+        },
+        [theme.breakpoints.down('xs')]: {
+            fontSize: '1.4rem'
+        },
+    }
+});
+
+const selectFontStyle = (theme: Theme) => ({
+    fontWeight: 'bold',
+    textAlign: 'center',
+    fontSize: '2.2rem',
+    [theme.breakpoints.down('lg')]: {
+        fontSize: '2.0rem'
+    },
+    [theme.breakpoints.down('md')]: {
+        fontSize: '1.8rem'
+    },
+    [theme.breakpoints.down('sm')]: {
+        fontSize: '1.6rem'
+    },
+    [theme.breakpoints.down('xs')]: {
+        fontSize: '1.4rem'
+    },
+});
 
 const timezones = ['UTC'].concat((Intl as any).supportedValuesOf('timeZone') as string[]);
 
@@ -28,7 +65,9 @@ const DateTimeComponent: FC = () => {
     const [isEdit, setIsEdit] = useState(false);
     const [timeDiff, setTimeDiff] = useState(0);
     const [timezone, setTimezone] = useState(displayDate.zoneName);
+
     const theme = useTheme();
+    console.log(theme);
 
     useEffect(() => {
         if (isCurrent) {
@@ -53,8 +92,8 @@ const DateTimeComponent: FC = () => {
         }
         else {
             setSavedDate(displayDate);
-            setDisplayDate(displayDate.setZone(timezone));
         }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [isPaused, timeDiff, timezone]);
 
     useEffect(() => {
@@ -64,12 +103,12 @@ const DateTimeComponent: FC = () => {
 
     return (
         <>
-            <Box sx={{ height: '84vh', display: 'flex', alignItems: 'center', paddingBottom: '10vh' }}>
-                <Grid container direction='column' alignItems='center' justifyItems='center' spacing={5}>
-                    <Grid item>
+            <Box sx={{ height: '85vh', display: 'flex', alignItems: 'center', justifyContent: 'center', paddingBottom: '2vh' }}>
+                <Grid container direction='column' display='flex' alignItems='center' justifyItems='center' spacing={{ xs: 1, sm: 2, md: 3, lg: 4, xl: 5 }}>
+                    <Grid>
                         {
                             !isEdit ?
-                                <Typography sx={{ ...fontStyle }} variant='h3'>
+                                <Typography noWrap sx={displayFontStyle} variant='h3'>
                                     {displayDate.toLocaleString(DateTime.DATE_MED_WITH_WEEKDAY)}
                                 </Typography> :
                                 <MobileDatePicker
@@ -84,14 +123,11 @@ const DateTimeComponent: FC = () => {
                                     slots={{
                                         textField: (props) => {
                                             return <FormControl variant='standard'>
-                                                <InputLabel sx={{ ...labelStyle }} {...props?.InputLabelProps}>Date</InputLabel>
+                                                <InputLabel sx={labelStyle} {...props?.InputLabelProps}>Date</InputLabel>
                                                 <Input
                                                     {...props?.InputProps}
                                                     type='text'
-                                                    sx={{
-                                                        ...fontStyle,
-                                                        input: { textAlign: 'center', fontSize: theme.typography.h3 }
-                                                    }}
+                                                    sx={inputFontStyle}
                                                     inputRef={props.inputRef}
                                                     inputProps={props.inputProps}
                                                     onClick={props.onClick}
@@ -117,11 +153,11 @@ const DateTimeComponent: FC = () => {
                                 />
                         }
                     </Grid>
-                    <Grid item container justifyContent='center' alignItems='center' direction='row' spacing={2}>
-                        <Grid item>
+                    <Grid container justifyContent='center' alignItems='center' direction='row' spacing={2}>
+                        <Grid>
                             {
                                 !isEdit ?
-                                    <Typography sx={{ ...fontStyle }} variant='h3'>
+                                    <Typography noWrap sx={displayFontStyle} variant='h3'>
                                         {displayDate.toLocaleString(DateTime.TIME_24_WITH_SECONDS)}
                                     </Typography> :
                                     <MobileTimePicker
@@ -137,14 +173,11 @@ const DateTimeComponent: FC = () => {
                                         slots={{
                                             textField: (props) => {
                                                 return <FormControl variant='standard'>
-                                                    <InputLabel sx={{ ...labelStyle }} {...props?.InputLabelProps}>Time</InputLabel>
+                                                    <InputLabel sx={labelStyle} {...props?.InputLabelProps}>Time</InputLabel>
                                                     <Input
                                                         {...props?.InputProps}
                                                         type='text'
-                                                        sx={{
-                                                            ...fontStyle,
-                                                            input: { textAlign: 'center', fontSize: theme.typography.h3 }
-                                                        }}
+                                                        sx={inputFontStyle}
                                                         inputRef={props.inputRef}
                                                         inputProps={props.inputProps}
                                                         onClick={props.onClick}
@@ -168,50 +201,39 @@ const DateTimeComponent: FC = () => {
                                     />
                             }
                         </Grid>
-                        <Grid item>
+                        <Grid>
                             {
                                 !isEdit ?
-                                    <Typography sx={{ ...fontStyle }} variant='h3'>
+                                    <Typography noWrap sx={displayFontStyle} variant='h3'>
                                         {displayDate.offsetNameShort}
                                     </Typography> :
                                     <FormControl variant='standard'>
-                                        <InputLabel sx={{ ...labelStyle, }}>Offset</InputLabel>
+                                        <InputLabel sx={labelStyle}>Offset</InputLabel>
                                         <Input
                                             disabled
                                             type='text'
-                                            sx={{
-                                                ...fontStyle,
-                                                input: { textAlign: 'center', fontSize: theme.typography.h3 }
-                                            }}
+                                            sx={inputFontStyle}
                                             value={displayDate.offsetNameShort} />
                                     </FormControl>
                             }
                         </Grid>
                     </Grid>
-                    <Grid item>
+                    <Grid>
                         {
                             !isEdit ?
-                                <Typography sx={{ ...fontStyle }} variant='h3'>
+                                <Typography noWrap sx={displayFontStyle} variant='h3'>
                                     {timezone}
                                 </Typography> :
                                 <FormControl variant='standard'>
-                                    <InputLabel sx={{ ...labelStyle }}>Timezone</InputLabel>
+                                    <InputLabel sx={labelStyle}>Timezone</InputLabel>
                                     <Select
-                                        sx={{
-                                            ...fontStyle,
-                                            fontSize: theme.typography.h3,
-                                            nativeInput: { textAlign: 'center', fontSize: theme.typography.h3 },
-                                            option: { textAlign: 'center', fontSize: theme.typography.h3 }
-                                        }}
+                                        sx={selectFontStyle}
                                         value={timezone}
                                         onChange={(event) => setTimezone(event.target.value)} >
                                         {
                                             timezones.map((tz) =>
                                                 <MenuItem
-                                                    sx={{
-                                                        ...fontStyle,
-                                                        fontSize: theme.typography.body1,
-                                                    }}
+                                                    sx={inputFontStyle}
                                                     key={tz}
                                                     value={tz}>
                                                     {tz}
@@ -222,23 +244,20 @@ const DateTimeComponent: FC = () => {
                                 </FormControl>
                         }
                     </Grid>
-                    <Grid item>
+                    <Grid>
                         {
                             !isEdit ?
-                                <Typography sx={{ ...fontStyle }} variant='h3'>
+                                <Typography noWrap sx={displayFontStyle} variant='h3'>
                                     {displayDate.toUnixInteger()}
                                 </Typography> :
                                 <FormControl variant='standard'>
-                                    <InputLabel sx={{ ...labelStyle }}>Epoch</InputLabel>
+                                    <InputLabel sx={labelStyle}>Epoch</InputLabel>
                                     <Input
                                         type='number'
-                                        sx={{
-                                            ...fontStyle,
-                                            input: { textAlign: 'center', fontSize: theme.typography.h3 }
-                                        }}
+                                        sx={inputFontStyle}
                                         value={displayDate.toUnixInteger()}
                                         onChange={(event) => {
-                                            console.log('onChange: ' + event?.target?.value); 
+                                            console.log('onChange: ' + event?.target?.value);
                                             setSavedDate(() => {
                                                 return DateTime.fromSeconds(parseInt(event.target.value) || 0);
                                             });
@@ -246,8 +265,8 @@ const DateTimeComponent: FC = () => {
                                 </FormControl>
                         }
                     </Grid>
-                    <Grid item container justifyContent='center' alignItems='center' direction='row' spacing={2}>
-                        <Grid item>
+                    <Grid container justifyContent='center' alignItems='center' direction='row' spacing={2}>
+                        <Grid>
                             <IconButton
                                 size='large'
                                 color='inherit'
@@ -262,7 +281,7 @@ const DateTimeComponent: FC = () => {
                                 {isPaused ? <PlayArrow fontSize='large' /> : <Pause fontSize='large' />}
                             </IconButton>
                         </Grid>
-                        <Grid item>
+                        <Grid>
                             <IconButton
                                 size='large'
                                 color='inherit'
@@ -280,7 +299,7 @@ const DateTimeComponent: FC = () => {
                                 {isEdit ? <Save fontSize='large' /> : <Edit fontSize='large' />}
                             </IconButton>
                         </Grid>
-                        <Grid item>
+                        <Grid>
                             <IconButton size='large' color='inherit' onClick={() => setIsCurrent(true)}>
                                 <RestartAlt fontSize='large' />
                             </IconButton>
