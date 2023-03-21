@@ -67,7 +67,7 @@ const DateTimeComponent: FC = () => {
     const [timezone, setTimezone] = useState(displayDate.zoneName);
 
     const theme = useTheme();
-    console.log(theme);
+    // console.log(theme);
 
     useEffect(() => {
         if (isCurrent) {
@@ -85,7 +85,7 @@ const DateTimeComponent: FC = () => {
             const timer = setInterval(() => {
                 console.log(timeDiff);
                 setDisplayDate(DateTime.local().setZone(timezone).minus(timeDiff * 1000));
-            }, 10);
+            }, 100);
             return () => {
                 clearInterval(timer);
             }
