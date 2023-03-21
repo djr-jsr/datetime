@@ -93,6 +93,7 @@ const DateTimeComponent: FC = () => {
         else {
             setSavedDate(displayDate);
         }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [isPaused, timeDiff, timezone]);
 
     useEffect(() => {
