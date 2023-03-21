@@ -66,7 +66,7 @@ const DateTimeComponent: FC = () => {
     const [timeDiff, setTimeDiff] = useState(0);
     const [timezone, setTimezone] = useState(displayDate.zoneName);
 
-    const theme = useTheme();
+    // const theme = useTheme();
     // console.log(theme);
 
     useEffect(() => {
