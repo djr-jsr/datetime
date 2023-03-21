@@ -92,7 +92,6 @@ const DateTimeComponent: FC = () => {
         }
         else {
             setSavedDate(displayDate);
-            setDisplayDate(displayDate.setZone(timezone));
         }
     }, [isPaused, timeDiff, timezone]);
 
