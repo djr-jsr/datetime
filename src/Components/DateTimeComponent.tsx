@@ -255,7 +255,7 @@ const DateTimeComponent: FC = () => {
                                     <Input
                                         type='number'
                                         sx={inputFontStyle}
-                                        value={displayDate.toUnixInteger()}
+                                        value={savedDate.toUnixInteger()}
                                         onChange={(event) => {
                                             console.log('onChange: ' + event?.target?.value);
                                             setSavedDate(() => {
