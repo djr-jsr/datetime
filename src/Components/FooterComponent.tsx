@@ -7,7 +7,7 @@ const FooterComponent: FC = () => {
     return (
         <Box
             sx={{
-                height: '3vh',
+                height: '3svh',
                 display: 'flex',
                 width: '100%',
                 alignItems: 'center',

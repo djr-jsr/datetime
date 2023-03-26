@@ -3,6 +3,7 @@ import { Box, Typography, Unstable_Grid2 as Grid, FormControl, InputLabel, Input
 import { DateTime } from 'luxon';
 import { Edit, Save, Pause, PlayArrow, RestartAlt } from '@mui/icons-material';
 import { MobileDatePicker, MobileTimePicker } from '@mui/x-date-pickers';
+import { supportedValuesOf } from '@formatjs/intl-enumerator';
 
 const displayFontStyle = (theme: Theme) => ({
     fontWeight: 'bold',
@@ -53,7 +54,7 @@ const selectFontStyle = (theme: Theme) => ({
     },
 });
 
-const timezones = ['UTC'].concat((Intl as any).supportedValuesOf('timeZone') as string[]);
+const timezones = ['UTC'].concat(supportedValuesOf('timeZone') as string[]);
 
 const DateTimeComponent: FC = () => {
 
@@ -103,7 +104,7 @@ const DateTimeComponent: FC = () => {
 
     return (
         <>
-            <Box sx={{ height: '85vh', display: 'flex', alignItems: 'center', justifyContent: 'center', paddingBottom: '2vh' }}>
+            <Box sx={{ height: '85svh', display: 'flex', alignItems: 'center', justifyContent: 'center', paddingBottom: '2svh' }}>
                 <Grid container direction='column' display='flex' alignItems='center' justifyItems='center' spacing={{ xs: 1, sm: 2, md: 3, lg: 4, xl: 5 }}>
                     <Grid>
                         {
