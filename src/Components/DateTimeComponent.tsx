@@ -70,7 +70,7 @@ const DateTimeComponent: FC = () => {
 
     const resetTime = () => {
         timeDiffRef.current = 0;
-        setDisplayDate(DateTime.local());
+        setDisplayDate(prevDate => DateTime.local().setZone(prevDate.zoneName));
     };
 
     useEffect(() => {
@@ -80,7 +80,7 @@ const DateTimeComponent: FC = () => {
             const timer = setInterval(() => {
                 const timeDiffValue = timeDiffRef.current;
                 console.log(timeDiffValue);
-                setDisplayDate(DateTime.local().minus(timeDiffValue * 1000));
+                setDisplayDate(prevDate => DateTime.local().setZone(prevDate.zoneName).minus(timeDiffValue * 1000));
             }, 100);
             return () => {
                 clearInterval(timer);
@@ -141,7 +141,7 @@ const DateTimeComponent: FC = () => {
                                         console.log('onAccept: ' + value?.toISO());
                                         const newDate = value as DateTime;
                                         const newTime = displayDate.set({ year: newDate.year, month: newDate.month, day: newDate.day });
-                                        setDisplayDate(newTime);
+                                        setDisplayDate(prevDate => newTime.setZone(prevDate.zoneName));
                                     }}
                                 />
                         }
@@ -187,7 +187,7 @@ const DateTimeComponent: FC = () => {
                                             console.log('onAccept: ' + value?.toISO());
                                             const newDate = value as DateTime;
                                             const newTime = displayDate.set({ hour: newDate.hour, minute: newDate.minute, second: newDate.second });
-                                            setDisplayDate(newTime);
+                                            setDisplayDate(prevDate => newTime.setZone(prevDate.zoneName));
                                         }}
                                     />
                             }
@@ -249,7 +249,7 @@ const DateTimeComponent: FC = () => {
                                         value={displayDate.toUnixInteger()}
                                         onChange={(event) => {
                                             console.log('onChange: ' + event?.target?.value);
-                                            setDisplayDate(DateTime.fromSeconds(parseInt(event.target.value) || 0));
+                                            setDisplayDate(prevDate => DateTime.fromSeconds(parseInt(event.target.value) || 0).setZone(prevDate.zoneName));
                                         }} />
                                 </FormControl>
                         }
