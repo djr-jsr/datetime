@@ -1,16 +1,17 @@
-import { FC, useState, useEffect } from 'react';
-import { Box, Typography, Unstable_Grid2 as Grid, FormControl, InputLabel, Input, IconButton, Select, MenuItem, Theme } from '@mui/material';
+import { FC, useState, useEffect, useRef } from 'react';
+import { Box, Typography, Unstable_Grid2 as Grid, FormControl, InputLabel, Input, IconButton, Theme, Autocomplete } from '@mui/material';
 import { DateTime } from 'luxon';
 import { Edit, Save, Pause, PlayArrow, RestartAlt } from '@mui/icons-material';
 import { MobileDatePicker, MobileTimePicker } from '@mui/x-date-pickers';
-import { supportedValuesOf } from '@formatjs/intl-enumerator';
+import { getTimeZones } from '@vvo/tzdb';
+import { useBoolean } from 'ahooks';
 
-const displayFontStyle = (theme: Theme) => ({
+const displayFontStyle = (_theme: Theme) => ({
     fontWeight: 'bold',
     input: { textAlign: 'center' }
 });
 
-const labelStyle = (theme: Theme) => ({
+const labelStyle = (_theme: Theme) => ({
     width: '100%',
     textAlign: 'center',
     transformOrigin: 'center'
@@ -36,71 +37,46 @@ const inputFontStyle = (theme: Theme) => ({
     }
 });
 
-const selectFontStyle = (theme: Theme) => ({
-    fontWeight: 'bold',
-    textAlign: 'center',
-    fontSize: '2.2rem',
-    [theme.breakpoints.down('lg')]: {
-        fontSize: '2.0rem'
-    },
-    [theme.breakpoints.down('md')]: {
-        fontSize: '1.8rem'
-    },
-    [theme.breakpoints.down('sm')]: {
-        fontSize: '1.6rem'
-    },
-    [theme.breakpoints.down('xs')]: {
-        fontSize: '1.4rem'
-    },
-});
-
-const timezones = ['UTC'].concat(supportedValuesOf('timeZone') as string[]);
+const timezones = getTimeZones({ includeUtc: true }).sort((a, b) => a.continentName.localeCompare(b.continentName));
 
 const DateTimeComponent: FC = () => {
 
+    const [isPaused, setIsPaused] = useBoolean(false);
+    const [isEdit, setIsEdit] = useBoolean(false);
+
+    const [timezone, setTimezone] = useState(DateTime.local().zoneName);
     const [displayDate, setDisplayDate] = useState(DateTime.local());
-    const [savedDate, setSavedDate] = useState(DateTime.local());
 
-    const [isPaused, setIsPaused] = useState(false);
-    const [isCurrent, setIsCurrent] = useState(false);
-    const [isEdit, setIsEdit] = useState(false);
-    const [timeDiff, setTimeDiff] = useState(0);
-    const [timezone, setTimezone] = useState(displayDate.zoneName);
+    const displayDateRef = useRef(displayDate);
+    const timeDiffRef = useRef(0);
 
-    // const theme = useTheme();
-    // console.log(theme);
-
-    useEffect(() => {
-        if (isCurrent) {
-            console.log('isCurrent: ' + isCurrent);
-            setTimeDiff(0);
-            setIsCurrent(false);
-            setSavedDate(DateTime.local());
-            setDisplayDate(DateTime.local().setZone(timezone));
-        }
-    }, [isCurrent, timezone]);
+    const resetTime = () => {
+        timeDiffRef.current = 0;
+        setDisplayDate(prevDate => DateTime.local().setZone(prevDate.zoneName));
+    };
 
     useEffect(() => {
         if (!isPaused) {
-            setTimeDiff(DateTime.local().toUnixInteger() - savedDate.toUnixInteger());
+            console.log('isPaused: ' + isPaused);
+            timeDiffRef.current = DateTime.local().toUnixInteger() - displayDateRef.current.toUnixInteger();
             const timer = setInterval(() => {
-                console.log(timeDiff);
-                setDisplayDate(DateTime.local().setZone(timezone).minus(timeDiff * 1000));
+                const timeDiffValue = timeDiffRef.current;
+                console.log(timeDiffValue);
+                setDisplayDate(prevDate => DateTime.local().setZone(prevDate.zoneName).minus(timeDiffValue * 1000));
             }, 100);
             return () => {
                 clearInterval(timer);
             }
         }
-        else {
-            setSavedDate(displayDate);
-        }
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [isPaused, timeDiff, timezone]);
+    }, [isPaused]);
 
     useEffect(() => {
-        console.log('savedDate: ' + savedDate?.toISO());
-        setDisplayDate(savedDate.setZone(timezone));
-    }, [savedDate, timezone]);
+        setDisplayDate((prevDate) => prevDate.setZone(timezone));
+    }, [timezone]);
+
+    useEffect(() => {
+        displayDateRef.current = displayDate;
+    }, [displayDate]);
 
     return (
         <>
@@ -145,11 +121,9 @@ const DateTimeComponent: FC = () => {
                                     onSelectedSectionsChange={(value) => { console.log('onSelectedSectionsChange: ' + value); }}
                                     onAccept={(value) => {
                                         console.log('onAccept: ' + value?.toISO());
-                                        setSavedDate(() => {
-                                            const newDate = value as DateTime;
-                                            const newTime = displayDate.set({ year: newDate.year, month: newDate.month, day: newDate.day });
-                                            return newTime;
-                                        });
+                                        const newDate = value as DateTime;
+                                        const newTime = displayDate.set({ year: newDate.year, month: newDate.month, day: newDate.day });
+                                        setDisplayDate(prevDate => newTime.setZone(prevDate.zoneName));
                                     }}
                                 />
                         }
@@ -193,11 +167,9 @@ const DateTimeComponent: FC = () => {
                                         onSelectedSectionsChange={(value) => { console.log('onSelectedSectionsChange: ' + value); }}
                                         onAccept={(value) => {
                                             console.log('onAccept: ' + value?.toISO());
-                                            setSavedDate(() => {
-                                                const newDate = value as DateTime;
-                                                const newTime = displayDate.set({ hour: newDate.hour, minute: newDate.minute, second: newDate.second });
-                                                return newTime;
-                                            });
+                                            const newDate = value as DateTime;
+                                            const newTime = displayDate.set({ hour: newDate.hour, minute: newDate.minute, second: newDate.second });
+                                            setDisplayDate(prevDate => newTime.setZone(prevDate.zoneName));
                                         }}
                                     />
                             }
@@ -223,26 +195,35 @@ const DateTimeComponent: FC = () => {
                         {
                             !isEdit ?
                                 <Typography noWrap sx={displayFontStyle} variant='h3'>
-                                    {timezone}
+                                    {(() => {
+                                        const tz = timezones.find(tz => tz.name === timezone);
+                                        return `${tz?.name} (${tz?.abbreviation})`;
+                                    })()}
                                 </Typography> :
-                                <FormControl variant='standard'>
-                                    <InputLabel sx={labelStyle}>Timezone</InputLabel>
-                                    <Select
-                                        sx={selectFontStyle}
-                                        value={timezone}
-                                        onChange={(event) => setTimezone(event.target.value)} >
-                                        {
-                                            timezones.map((tz) =>
-                                                <MenuItem
-                                                    sx={inputFontStyle}
-                                                    key={tz}
-                                                    value={tz}>
-                                                    {tz}
-                                                </MenuItem>
-                                            )
-                                        }
-                                    </Select>
-                                </FormControl>
+                                <Autocomplete
+                                    fullWidth={true}
+                                    options={timezones}
+                                    getOptionLabel={(option) => `${option.name} (${option.abbreviation})`}
+                                    groupBy={(option) => option.continentName}
+                                    value={timezones.find(tz => tz.name === timezone)}
+                                    componentsProps={{ popper: { style: { width: 'fit-content' } } }}
+                                    renderInput={(params) =>
+                                        <FormControl variant='standard'>
+                                            <InputLabel sx={labelStyle}>Timezone</InputLabel>
+                                            <Input
+                                                {...params.InputProps}
+                                                inputProps={{ ...params.inputProps, style: { ...params.inputProps.style, width: 'fit-content' } }}
+                                                sx={inputFontStyle}
+                                            />
+                                        </FormControl>
+                                    }
+                                    renderOption={(props, option) =>
+                                        <Box component='li' {...props} sx={inputFontStyle}>
+                                            {option.name} ({option.abbreviation})
+                                        </Box>
+                                    }
+                                    onChange={(event, newValue) => setTimezone(newValue!.name)}
+                                />
                         }
                     </Grid>
                     <Grid>
@@ -256,12 +237,10 @@ const DateTimeComponent: FC = () => {
                                     <Input
                                         type='number'
                                         sx={inputFontStyle}
-                                        value={savedDate.toUnixInteger()}
+                                        value={displayDate.toUnixInteger()}
                                         onChange={(event) => {
                                             console.log('onChange: ' + event?.target?.value);
-                                            setSavedDate(() => {
-                                                return DateTime.fromSeconds(parseInt(event.target.value) || 0);
-                                            });
+                                            setDisplayDate(prevDate => DateTime.fromSeconds(parseInt(event.target.value) || 0).setZone(prevDate.zoneName));
                                         }} />
                                 </FormControl>
                         }
@@ -274,8 +253,7 @@ const DateTimeComponent: FC = () => {
                                 onClick={
                                     () => {
                                         if (!isEdit) {
-                                            setTimeDiff(DateTime.local().toUnixInteger() - displayDate.toUnixInteger());
-                                            setIsPaused((prev) => !prev);
+                                            setIsPaused.toggle();
                                         }
                                     }
                                 }>
@@ -288,20 +266,15 @@ const DateTimeComponent: FC = () => {
                                 color='inherit'
                                 onClick={
                                     () => {
-                                        setIsEdit((prev) => {
-                                            if (!prev) {
-                                                setIsPaused(true);
-                                            }
-
-                                            return !prev;
-                                        });
+                                        setIsEdit.toggle();
+                                        setIsPaused.setTrue();
                                     }
                                 }>
                                 {isEdit ? <Save fontSize='large' /> : <Edit fontSize='large' />}
                             </IconButton>
                         </Grid>
                         <Grid>
-                            <IconButton size='large' color='inherit' onClick={() => setIsCurrent(true)}>
+                            <IconButton size='large' color='inherit' onClick={() => resetTime()}>
                                 <RestartAlt fontSize='large' />
                             </IconButton>
                         </Grid>
