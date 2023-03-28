@@ -1,16 +1,17 @@
-import { FC, useState, useEffect } from 'react';
+import { FC, useState, useEffect, useRef } from 'react';
 import { Box, Typography, Unstable_Grid2 as Grid, FormControl, InputLabel, Input, IconButton, Select, MenuItem, Theme } from '@mui/material';
 import { DateTime } from 'luxon';
 import { Edit, Save, Pause, PlayArrow, RestartAlt } from '@mui/icons-material';
 import { MobileDatePicker, MobileTimePicker } from '@mui/x-date-pickers';
 import { supportedValuesOf } from '@formatjs/intl-enumerator';
+import { useBoolean } from 'ahooks';
 
-const displayFontStyle = (theme: Theme) => ({
+const displayFontStyle = (_theme: Theme) => ({
     fontWeight: 'bold',
     input: { textAlign: 'center' }
 });
 
-const labelStyle = (theme: Theme) => ({
+const labelStyle = (_theme: Theme) => ({
     width: '100%',
     textAlign: 'center',
     transformOrigin: 'center'
@@ -58,49 +59,42 @@ const timezones = ['UTC'].concat(supportedValuesOf('timeZone') as string[]);
 
 const DateTimeComponent: FC = () => {
 
+    const [isPaused, setIsPaused] = useBoolean(false);
+    const [isEdit, setIsEdit] = useBoolean(false);
+    
+    const [timezone, setTimezone] = useState(DateTime.local().zoneName);
     const [displayDate, setDisplayDate] = useState(DateTime.local());
-    const [savedDate, setSavedDate] = useState(DateTime.local());
 
-    const [isPaused, setIsPaused] = useState(false);
-    const [isCurrent, setIsCurrent] = useState(false);
-    const [isEdit, setIsEdit] = useState(false);
-    const [timeDiff, setTimeDiff] = useState(0);
-    const [timezone, setTimezone] = useState(displayDate.zoneName);
+    const displayDateRef = useRef(displayDate);
+    const timeDiffRef = useRef(0);
 
-    // const theme = useTheme();
-    // console.log(theme);
-
-    useEffect(() => {
-        if (isCurrent) {
-            console.log('isCurrent: ' + isCurrent);
-            setTimeDiff(0);
-            setIsCurrent(false);
-            setSavedDate(DateTime.local());
-            setDisplayDate(DateTime.local().setZone(timezone));
-        }
-    }, [isCurrent, timezone]);
+    const resetTime = () => {
+        timeDiffRef.current = 0;
+        setDisplayDate(DateTime.local());
+    };
 
     useEffect(() => {
         if (!isPaused) {
-            setTimeDiff(DateTime.local().toUnixInteger() - savedDate.toUnixInteger());
+            console.log('isPaused: ' + isPaused);
+            timeDiffRef.current = DateTime.local().toUnixInteger() - displayDateRef.current.toUnixInteger();
             const timer = setInterval(() => {
-                console.log(timeDiff);
-                setDisplayDate(DateTime.local().setZone(timezone).minus(timeDiff * 1000));
+                const timeDiffValue = timeDiffRef.current;
+                console.log(timeDiffValue);
+                setDisplayDate(DateTime.local().minus(timeDiffValue * 1000));
             }, 100);
             return () => {
                 clearInterval(timer);
             }
         }
-        else {
-            setSavedDate(displayDate);
-        }
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [isPaused, timeDiff, timezone]);
+    }, [isPaused]);
 
     useEffect(() => {
-        console.log('savedDate: ' + savedDate?.toISO());
-        setDisplayDate(savedDate.setZone(timezone));
-    }, [savedDate, timezone]);
+        setDisplayDate((prevDate) => prevDate.setZone(timezone));
+    }, [timezone]);
+
+    useEffect(() => {
+        displayDateRef.current = displayDate;
+    }, [displayDate]);
 
     return (
         <>
@@ -145,11 +139,9 @@ const DateTimeComponent: FC = () => {
                                     onSelectedSectionsChange={(value) => { console.log('onSelectedSectionsChange: ' + value); }}
                                     onAccept={(value) => {
                                         console.log('onAccept: ' + value?.toISO());
-                                        setSavedDate(() => {
-                                            const newDate = value as DateTime;
-                                            const newTime = displayDate.set({ year: newDate.year, month: newDate.month, day: newDate.day });
-                                            return newTime;
-                                        });
+                                        const newDate = value as DateTime;
+                                        const newTime = displayDate.set({ year: newDate.year, month: newDate.month, day: newDate.day });
+                                        setDisplayDate(newTime);
                                     }}
                                 />
                         }
@@ -193,11 +185,9 @@ const DateTimeComponent: FC = () => {
                                         onSelectedSectionsChange={(value) => { console.log('onSelectedSectionsChange: ' + value); }}
                                         onAccept={(value) => {
                                             console.log('onAccept: ' + value?.toISO());
-                                            setSavedDate(() => {
-                                                const newDate = value as DateTime;
-                                                const newTime = displayDate.set({ hour: newDate.hour, minute: newDate.minute, second: newDate.second });
-                                                return newTime;
-                                            });
+                                            const newDate = value as DateTime;
+                                            const newTime = displayDate.set({ hour: newDate.hour, minute: newDate.minute, second: newDate.second });
+                                            setDisplayDate(newTime);
                                         }}
                                     />
                             }
@@ -256,12 +246,10 @@ const DateTimeComponent: FC = () => {
                                     <Input
                                         type='number'
                                         sx={inputFontStyle}
-                                        value={savedDate.toUnixInteger()}
+                                        value={displayDate.toUnixInteger()}
                                         onChange={(event) => {
                                             console.log('onChange: ' + event?.target?.value);
-                                            setSavedDate(() => {
-                                                return DateTime.fromSeconds(parseInt(event.target.value) || 0);
-                                            });
+                                            setDisplayDate(DateTime.fromSeconds(parseInt(event.target.value) || 0));
                                         }} />
                                 </FormControl>
                         }
@@ -274,8 +262,7 @@ const DateTimeComponent: FC = () => {
                                 onClick={
                                     () => {
                                         if (!isEdit) {
-                                            setTimeDiff(DateTime.local().toUnixInteger() - displayDate.toUnixInteger());
-                                            setIsPaused((prev) => !prev);
+                                            setIsPaused.toggle();
                                         }
                                     }
                                 }>
@@ -288,20 +275,15 @@ const DateTimeComponent: FC = () => {
                                 color='inherit'
                                 onClick={
                                     () => {
-                                        setIsEdit((prev) => {
-                                            if (!prev) {
-                                                setIsPaused(true);
-                                            }
-
-                                            return !prev;
-                                        });
+                                        setIsEdit.toggle();
+                                        setIsPaused.setTrue();
                                     }
                                 }>
                                 {isEdit ? <Save fontSize='large' /> : <Edit fontSize='large' />}
                             </IconButton>
                         </Grid>
                         <Grid>
-                            <IconButton size='large' color='inherit' onClick={() => setIsCurrent(true)}>
+                            <IconButton size='large' color='inherit' onClick={() => resetTime()}>
                                 <RestartAlt fontSize='large' />
                             </IconButton>
                         </Grid>

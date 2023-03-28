@@ -3,10 +3,10 @@ import { createTheme, ThemeProvider, responsiveFontSizes } from '@mui/material/s
 import { useMediaQuery, CssBaseline } from '@mui/material';
 import { LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterLuxon } from '@mui/x-date-pickers/AdapterLuxon';
+import { useLocalStorageState } from 'ahooks';
 import ModeSelectorComponent from './Components/ModeSelectorComponent';
 import DateTimeComponent from './Components/DateTimeComponent';
 import FooterComponent from './Components/FooterComponent';
-import useLocalStorage from './Hooks/useLocalStorage';
 import '@fontsource/poppins';
 
 export const enum ThemeMode {
@@ -18,10 +18,10 @@ export const ColorModeContext = createContext(() => { });
 
 function App() {
     const prefersDarkMode = useMediaQuery('(prefers-color-scheme: dark)');
-    const [mode, setMode] = useLocalStorage('mode', prefersDarkMode ? ThemeMode.dark : ThemeMode.light);
+    const [mode, setMode] = useLocalStorageState<ThemeMode>('mode', { defaultValue: prefersDarkMode ? ThemeMode.dark : ThemeMode.light });
 
     const toggleColorMode = () => {
-        setMode((prevMode: string) => (prevMode === ThemeMode.dark ? ThemeMode.light : ThemeMode.dark));
+        setMode((prevMode) => (prevMode === ThemeMode.dark ? ThemeMode.light : ThemeMode.dark));
     };
 
     const theme = useMemo(
