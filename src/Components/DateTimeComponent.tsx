@@ -1,9 +1,9 @@
 import { FC, useState, useEffect, useRef } from 'react';
-import { Box, Typography, Unstable_Grid2 as Grid, FormControl, InputLabel, Input, IconButton, Select, MenuItem, Theme } from '@mui/material';
+import { Box, Typography, Unstable_Grid2 as Grid, FormControl, InputLabel, Input, IconButton, Theme, Autocomplete } from '@mui/material';
 import { DateTime } from 'luxon';
 import { Edit, Save, Pause, PlayArrow, RestartAlt } from '@mui/icons-material';
 import { MobileDatePicker, MobileTimePicker } from '@mui/x-date-pickers';
-import { supportedValuesOf } from '@formatjs/intl-enumerator';
+import { getTimeZones } from '@vvo/tzdb';
 import { useBoolean } from 'ahooks';
 
 const displayFontStyle = (_theme: Theme) => ({
@@ -37,31 +37,13 @@ const inputFontStyle = (theme: Theme) => ({
     }
 });
 
-const selectFontStyle = (theme: Theme) => ({
-    fontWeight: 'bold',
-    textAlign: 'center',
-    fontSize: '2.2rem',
-    [theme.breakpoints.down('lg')]: {
-        fontSize: '2.0rem'
-    },
-    [theme.breakpoints.down('md')]: {
-        fontSize: '1.8rem'
-    },
-    [theme.breakpoints.down('sm')]: {
-        fontSize: '1.6rem'
-    },
-    [theme.breakpoints.down('xs')]: {
-        fontSize: '1.4rem'
-    },
-});
-
-const timezones = ['UTC'].concat(supportedValuesOf('timeZone') as string[]);
+const timezones = getTimeZones({ includeUtc: true }).sort((a, b) => a.continentName.localeCompare(b.continentName));
 
 const DateTimeComponent: FC = () => {
 
     const [isPaused, setIsPaused] = useBoolean(false);
     const [isEdit, setIsEdit] = useBoolean(false);
-    
+
     const [timezone, setTimezone] = useState(DateTime.local().zoneName);
     const [displayDate, setDisplayDate] = useState(DateTime.local());
 
@@ -213,26 +195,35 @@ const DateTimeComponent: FC = () => {
                         {
                             !isEdit ?
                                 <Typography noWrap sx={displayFontStyle} variant='h3'>
-                                    {timezone}
+                                    {(() => {
+                                        const tz = timezones.find(tz => tz.name === timezone);
+                                        return `${tz?.name} (${tz?.abbreviation})`;
+                                    })()}
                                 </Typography> :
-                                <FormControl variant='standard'>
-                                    <InputLabel sx={labelStyle}>Timezone</InputLabel>
-                                    <Select
-                                        sx={selectFontStyle}
-                                        value={timezone}
-                                        onChange={(event) => setTimezone(event.target.value)} >
-                                        {
-                                            timezones.map((tz) =>
-                                                <MenuItem
-                                                    sx={inputFontStyle}
-                                                    key={tz}
-                                                    value={tz}>
-                                                    {tz}
-                                                </MenuItem>
-                                            )
-                                        }
-                                    </Select>
-                                </FormControl>
+                                <Autocomplete
+                                    fullWidth={true}
+                                    options={timezones}
+                                    getOptionLabel={(option) => `${option.name} (${option.abbreviation})`}
+                                    groupBy={(option) => option.continentName}
+                                    value={timezones.find(tz => tz.name === timezone)}
+                                    componentsProps={{ popper: { style: { width: 'fit-content' } } }}
+                                    renderInput={(params) =>
+                                        <FormControl variant='standard'>
+                                            <InputLabel sx={labelStyle}>Timezone</InputLabel>
+                                            <Input
+                                                {...params.InputProps}
+                                                inputProps={{ ...params.inputProps, style: { ...params.inputProps.style, width: 'fit-content' } }}
+                                                sx={inputFontStyle}
+                                            />
+                                        </FormControl>
+                                    }
+                                    renderOption={(props, option) =>
+                                        <Box component='li' {...props} sx={inputFontStyle}>
+                                            {option.name} ({option.abbreviation})
+                                        </Box>
+                                    }
+                                    onChange={(event, newValue) => setTimezone(newValue!.name)}
+                                />
                         }
                     </Grid>
                     <Grid>
