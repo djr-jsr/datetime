@@ -17,7 +17,7 @@
     "@testing-library/jest-dom": "^5.16.5",
     "@testing-library/react": "^14.0.0",
     "@testing-library/user-event": "^14.4.3",
-    "@vvo/tzdb": "^6.106.0",
+    "@vvo/tzdb": "^6.107.0",
     "ahooks": "^3.7.6",
     "luxon": "^3.3.0",
     "package.json": "^2.0.1",

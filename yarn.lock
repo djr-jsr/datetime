@@ -2681,10 +2681,10 @@
     "@typescript-eslint/types" "5.59.0"
     eslint-visitor-keys "^3.3.0"
 
-"@vvo/tzdb@^6.106.0":
-  version "6.106.0"
-  resolved "https://registry.yarnpkg.com/@vvo/tzdb/-/tzdb-6.106.0.tgz#6d3413f20ae7a605895ebd529c68c31fe497e009"
-  integrity sha512-NMgDMHn79j5ABSTqCMxXROgLSzLx8QS/HzuSCkvcZ+TGgvVUh1Ob7JN9Vsp6r7LU5av02aWv6shfpogtHsxTWA==
+"@vvo/tzdb@^6.107.0":
+  version "6.107.0"
+  resolved "https://registry.yarnpkg.com/@vvo/tzdb/-/tzdb-6.107.0.tgz#f5ba2d912525e64751fef1ba7315081c9b73d1d3"
+  integrity sha512-WVDKqpaP5UXVMC5pa1i9HQ8BHD5wBTUvxLPArC5BGalXlKrOBxS8otKz4YjQl7zMsiG/MoW46jGTHRbcgrKkVQ==
 
 "@webassemblyjs/ast@1.11.1":
   version "1.11.1"
