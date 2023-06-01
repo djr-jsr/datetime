@@ -2615,10 +2615,10 @@
     "@typescript-eslint/types" "5.59.2"
     eslint-visitor-keys "^3.3.0"
 
-"@vvo/tzdb@^6.107.0":
-  version "6.107.0"
-  resolved "https://registry.yarnpkg.com/@vvo/tzdb/-/tzdb-6.107.0.tgz#f5ba2d912525e64751fef1ba7315081c9b73d1d3"
-  integrity sha512-WVDKqpaP5UXVMC5pa1i9HQ8BHD5wBTUvxLPArC5BGalXlKrOBxS8otKz4YjQl7zMsiG/MoW46jGTHRbcgrKkVQ==
+"@vvo/tzdb@^6.108.0":
+  version "6.108.0"
+  resolved "https://registry.yarnpkg.com/@vvo/tzdb/-/tzdb-6.108.0.tgz#aa490d70320ffe3ed388d92a666dc051a4ca3bd1"
+  integrity sha512-/UI2yKYNlcPVsVajMNcLfcsZgD+TtmE9hsN+3JTrk8N4/Kwlr35SqMOZuSU7lwWG+PvWmWKs51f2SMM0JGWxww==
 
 "@webassemblyjs/ast@1.11.1":
   version "1.11.1"
