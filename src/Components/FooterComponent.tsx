@@ -1,6 +1,6 @@
 import { FC } from 'react';
 import { Box, IconButton } from '@mui/material';
-import { Feedback } from '@mui/icons-material';
+import { GitHub } from '@mui/icons-material';
 
 const FooterComponent: FC = () => {
 
@@ -17,8 +17,8 @@ const FooterComponent: FC = () => {
                 borderRadius: 1
             }}
         >
-            <IconButton size='large' color='inherit' onClick={() => window.open('https://forms.gle/UND2VRswAZjY1BqB8', '_blank')}>
-                <Feedback fontSize='large' />
+            <IconButton size='large' color='inherit' onClick={() => window.open('https://github.com/djr-jsr/datetime', '_blank')}>
+                <GitHub fontSize='large' />
             </IconButton>
         </Box>
     );
