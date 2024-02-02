@@ -2510,10 +2510,10 @@
   resolved "https://registry.yarnpkg.com/@ungap/structured-clone/-/structured-clone-1.2.0.tgz#756641adb587851b5ccb3e095daf27ae581c8406"
   integrity sha512-zuVdFrMJiuCDQUMCzQaD6KL28MjnqqN8XnAqiEq9PNm/hCPTSGfrXCOfwj1ow4LFb/tNymJPwsNbVePc1xFqrQ==
 
-"@vvo/tzdb@^6.108.0":
-  version "6.108.0"
-  resolved "https://registry.yarnpkg.com/@vvo/tzdb/-/tzdb-6.108.0.tgz#aa490d70320ffe3ed388d92a666dc051a4ca3bd1"
-  integrity sha512-/UI2yKYNlcPVsVajMNcLfcsZgD+TtmE9hsN+3JTrk8N4/Kwlr35SqMOZuSU7lwWG+PvWmWKs51f2SMM0JGWxww==
+"@vvo/tzdb@^6.125.0":
+  version "6.125.0"
+  resolved "https://registry.yarnpkg.com/@vvo/tzdb/-/tzdb-6.125.0.tgz#c64cd4380b1590ad16fb517255be50b994b17afd"
+  integrity sha512-zxOP62q3CUYIIe6sL/IK6AhmhnPUuHPNx86qZTXuzQHo/QhQRTfXb331poUStTDdZgBoLc6BADUATbGGN/1d4A==
 
 "@webassemblyjs/ast@1.11.6", "@webassemblyjs/ast@^1.11.5":
   version "1.11.6"
