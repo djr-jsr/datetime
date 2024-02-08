@@ -61,7 +61,6 @@ const DateTimeComponent: FC = () => {
             timeDiffRef.current = DateTime.local().toUnixInteger() - displayDateRef.current.toUnixInteger();
             const timer = setInterval(() => {
                 const timeDiffValue = timeDiffRef.current;
-                console.log(timeDiffValue);
                 setDisplayDate(prevDate => DateTime.local().setZone(prevDate.zoneName!).minus(timeDiffValue * 1000));
             }, 100);
             return () => {
@@ -196,7 +195,7 @@ const DateTimeComponent: FC = () => {
                             !isEdit ?
                                 <Typography noWrap sx={displayFontStyle} variant='h3'>
                                     {(() => {
-                                        const tz = timezones.find(tz => tz.name === timezone);
+                                        const tz = timezones.find(tz => tz.group.map(v => v.toLocaleLowerCase()).includes(timezone?.toLocaleLowerCase()!));
                                         return `${tz?.name} (${tz?.abbreviation})`;
                                     })()}
                                 </Typography> :
