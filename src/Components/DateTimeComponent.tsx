@@ -44,7 +44,7 @@ const DateTimeComponent: FC = () => {
     const [isPaused, setIsPaused] = useBoolean(false);
     const [isEdit, setIsEdit] = useBoolean(false);
 
-    const [timezone, setTimezone] = useState(DateTime.local().zoneName);
+    const [timezone, setTimezone] = useState(timezones.find(tz => tz.group.map(v => v.toLocaleLowerCase()).includes(DateTime.local().zoneName?.toLocaleLowerCase()!)));
     const [displayDate, setDisplayDate] = useState(DateTime.local());
 
     const displayDateRef = useRef(displayDate);
@@ -70,7 +70,7 @@ const DateTimeComponent: FC = () => {
     }, [isPaused]);
 
     useEffect(() => {
-        setDisplayDate((prevDate) => prevDate.setZone(timezone!));
+        setDisplayDate((prevDate) => prevDate.setZone(timezone?.name));
     }, [timezone]);
 
     useEffect(() => {
@@ -177,7 +177,7 @@ const DateTimeComponent: FC = () => {
                             {
                                 !isEdit ?
                                     <Typography noWrap sx={displayFontStyle} variant='h3'>
-                                        {displayDate.offsetNameShort}
+                                        {displayDate.toFormat('ZZ')}
                                     </Typography> :
                                     <FormControl variant='standard'>
                                         <InputLabel sx={labelStyle}>Offset</InputLabel>
@@ -185,7 +185,7 @@ const DateTimeComponent: FC = () => {
                                             disabled
                                             type='text'
                                             sx={inputFontStyle}
-                                            value={displayDate.offsetNameShort} />
+                                            value={displayDate.toFormat('ZZ')} />
                                     </FormControl>
                             }
                         </Grid>
@@ -194,17 +194,14 @@ const DateTimeComponent: FC = () => {
                         {
                             !isEdit ?
                                 <Typography noWrap sx={displayFontStyle} variant='h3'>
-                                    {(() => {
-                                        const tz = timezones.find(tz => tz.group.map(v => v.toLocaleLowerCase()).includes(timezone?.toLocaleLowerCase()!));
-                                        return `${tz?.name} (${tz?.abbreviation})`;
-                                    })()}
+                                    {`${timezone?.name} (${timezone?.abbreviation})`}
                                 </Typography> :
                                 <Autocomplete
                                     fullWidth={true}
                                     options={timezones}
                                     getOptionLabel={(option) => `${option.name} (${option.abbreviation})`}
                                     groupBy={(option) => option.continentName}
-                                    value={timezones.find(tz => tz.name === timezone)}
+                                    value={timezone}
                                     componentsProps={{ popper: { style: { width: 'fit-content' } } }}
                                     renderInput={(params) =>
                                         <FormControl variant='standard'>
@@ -221,7 +218,18 @@ const DateTimeComponent: FC = () => {
                                             {option.name} ({option.abbreviation})
                                         </Box>
                                     }
-                                    onChange={(event, newValue) => setTimezone(newValue!.name)}
+                                    filterOptions={(options, params) => {
+                                        const filtered = options.filter(option => 
+                                            option.name.toLowerCase().includes(params.inputValue.toLowerCase()) ||
+                                            option.abbreviation.toLowerCase().includes(params.inputValue.toLowerCase()) ||
+                                            option.group.some(v => v.toLowerCase().includes(params.inputValue.toLowerCase()) ||
+                                            option.countryName.toLowerCase().includes(params.inputValue.toLowerCase())) ||
+                                            option.continentName.toLowerCase().includes(params.inputValue.toLowerCase()) ||
+                                            option.mainCities.some(v => v.toLowerCase().includes(params.inputValue.toLowerCase()))
+                                        );
+                                        return filtered;
+                                    }}
+                                    onChange={(event, newValue) => setTimezone(newValue!)}
                                 />
                         }
                     </Grid>
