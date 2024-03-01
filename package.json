@@ -11,7 +11,7 @@
     "@mui/system": "^5.15.6",
     "@mui/x-date-pickers": "^6.19.2",
     "@vvo/tzdb": "^6.125.0",
-    "ahooks": "^3.7.8",
+    "ahooks": "^3.7.10",
     "luxon": "^3.3.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
