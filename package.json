@@ -9,7 +9,7 @@
     "@mui/icons-material": "^5.16.7",
     "@mui/material": "^5.16.7",
     "@mui/system": "^5.16.7",
-    "@mui/x-date-pickers": "^6.19.2",
+    "@mui/x-date-pickers": "^7.18.0",
     "@vvo/tzdb": "^6.145.0",
     "ahooks": "^3.8.0",
     "luxon": "^3.3.0",
