@@ -11,9 +11,18 @@ jobs:
     runs-on: ubuntu-latest
     name: Build and Deploy Job
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v4
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
         with:
-          submodules: true
+          node-version: "latest"
+          cache: "yarn"
+      - run: yarn version --patch
+      - run: yarn prebuild
+      - name: Push new version
+        run: |
+          git push --tags
+          git push
       - name: Build And Deploy
         id: builddeploy
         uses: Azure/static-web-apps-deploy@v1
