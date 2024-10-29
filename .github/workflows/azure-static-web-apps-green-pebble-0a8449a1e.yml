@@ -21,6 +21,8 @@ jobs:
       - run: yarn prebuild
       - name: Push new version
         run: |
+          git config --global user.email "6954106+djr-jsr@users.noreply.github.com"
+          git config --global user.name "GitHub Actions"
           git push --tags
           git push
       - name: Build And Deploy
