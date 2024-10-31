@@ -79,7 +79,7 @@ const DateTimeComponent: FC = () => {
 
     return (
         <>
-            <Box sx={{ height: '85svh', display: 'flex', alignItems: 'center', justifyContent: 'center', paddingBottom: '2svh' }}>
+            <Box sx={{ height: '80svh', display: 'flex', alignItems: 'center', justifyContent: 'center', paddingBottom: '2svh' }}>
                 <Grid container direction='column' display='flex' alignItems='center' justifyItems='center' spacing={{ xs: 1, sm: 2, md: 3, lg: 4, xl: 5 }}>
                     <Grid>
                         {
