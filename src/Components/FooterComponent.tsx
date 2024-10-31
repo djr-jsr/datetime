@@ -13,7 +13,7 @@ const FooterComponent: FC = () => {
     return (
         <Box
             sx={{
-                height: '3svh',
+                height: '10svh',
                 display: 'flex',
                 width: '100%',
                 alignItems: 'center',
@@ -23,13 +23,17 @@ const FooterComponent: FC = () => {
                 borderRadius: 1
             }}
         >
-            <Grid container direction='column' display='flex' alignItems='center' justifyItems='center' spacing={{ xs: 1, sm: 2, md: 3, lg: 4, xl: 5 }}>
-                <IconButton size='large' color='inherit' onClick={() => window.open('https://github.com/djr-jsr/datetime', '_blank')}>
-                    <GitHub fontSize='large' />
-                </IconButton>
-                <Typography noWrap sx={displayFontStyle}>
-                    {LIB_VERSION || '0.0.0'}
-                </Typography>
+            <Grid container direction='column' display='flex' alignItems='center' justifyItems='center'>
+                <Grid>
+                    <IconButton size='large' color='inherit' onClick={() => window.open('https://github.com/djr-jsr/datetime', '_blank')}>
+                        <GitHub fontSize='large' />
+                    </IconButton>
+                </Grid>
+                <Grid>
+                    <Typography noWrap sx={displayFontStyle}>
+                        {LIB_VERSION || '0.0.0'}
+                    </Typography>
+                </Grid>
             </Grid>
         </Box>
     );
