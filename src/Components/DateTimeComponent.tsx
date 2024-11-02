@@ -1,6 +1,6 @@
 import { FC, useState, useEffect, useRef } from 'react';
 import { Box, Typography, Unstable_Grid2 as Grid, FormControl, InputLabel, Input, IconButton, Theme, Autocomplete } from '@mui/material';
-import { DateTime } from 'luxon';
+import { DateTime, type DateTimeMaybeValid } from 'luxon';
 import { Edit, Save, Pause, PlayArrow, RestartAlt } from '@mui/icons-material';
 import { MobileDatePicker, MobileTimePicker } from '@mui/x-date-pickers';
 import { getTimeZones } from '@vvo/tzdb';
@@ -45,7 +45,7 @@ const DateTimeComponent: FC = () => {
     const [isEdit, setIsEdit] = useBoolean(false);
 
     const [timezone, setTimezone] = useState(timezones.find(tz => tz.group.map(v => v.toLocaleLowerCase()).includes(DateTime.local().zoneName?.toLocaleLowerCase()!)));
-    const [displayDate, setDisplayDate] = useState(DateTime.local());
+    const [displayDate, setDisplayDate] = useState<DateTimeMaybeValid>(DateTime.local());
 
     const displayDateRef = useRef(displayDate);
     const timeDiffRef = useRef(0);
@@ -219,11 +219,11 @@ const DateTimeComponent: FC = () => {
                                         </Box>
                                     }
                                     filterOptions={(options, params) => {
-                                        const filtered = options.filter(option => 
+                                        const filtered = options.filter(option =>
                                             option.name.toLowerCase().includes(params.inputValue.toLowerCase()) ||
                                             option.abbreviation.toLowerCase().includes(params.inputValue.toLowerCase()) ||
                                             option.group.some(v => v.toLowerCase().includes(params.inputValue.toLowerCase()) ||
-                                            option.countryName.toLowerCase().includes(params.inputValue.toLowerCase())) ||
+                                                option.countryName.toLowerCase().includes(params.inputValue.toLowerCase())) ||
                                             option.continentName.toLowerCase().includes(params.inputValue.toLowerCase()) ||
                                             option.mainCities.some(v => v.toLowerCase().includes(params.inputValue.toLowerCase()))
                                         );
