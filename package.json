@@ -6,7 +6,7 @@
     "node": ">=22.x"
   },
   "dependencies": {
-    "@emotion/react": "^11.13.5",
+    "@emotion/react": "^11.14.0",
     "@emotion/styled": "^11.13.0",
     "@fontsource/poppins": "^5.1.0",
     "@mui/icons-material": "^5.16.11",
