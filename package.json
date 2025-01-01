@@ -10,7 +10,7 @@
     "@emotion/styled": "^11.13.0",
     "@fontsource/poppins": "^5.1.0",
     "@mui/icons-material": "^5.16.11",
-    "@mui/material": "^5.16.7",
+    "@mui/material": "^5.16.13",
     "@mui/system": "^5.16.7",
     "@mui/x-date-pickers": "^7.23.0",
     "@vvo/tzdb": "^6.145.0",
