@@ -20,9 +20,9 @@ jobs:
       - run: |
           git config --global user.email "6954106+djr-jsr@users.noreply.github.com"
           git config --global user.name "GitHub Actions"
+          git pull
           yarn version --patch
           yarn prebuild
-          git pull
           git push
           git push --tags
       - name: Build And Deploy
