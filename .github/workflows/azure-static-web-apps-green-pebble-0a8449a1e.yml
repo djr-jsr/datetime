@@ -22,8 +22,9 @@ jobs:
           git config --global user.name "GitHub Actions"
           yarn version --patch
           yarn prebuild
-          git push --tags
+          git pull
           git push
+          git push --tags
       - name: Build And Deploy
         id: builddeploy
         uses: Azure/static-web-apps-deploy@v1
