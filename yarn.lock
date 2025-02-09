@@ -1501,10 +1501,10 @@
   resolved "https://registry.yarnpkg.com/@eslint/js/-/js-8.56.0.tgz#ef20350fec605a7f7035a01764731b2de0f3782b"
   integrity sha512-gMsVel9D7f2HLkBma9VbtzZRehRogVRfbr++f06nL2vnCGCNlzOD+/MUov/F4p8myyAHspEhVobgjpX64q5m6A==
 
-"@fontsource/poppins@^5.1.0":
-  version "5.1.0"
-  resolved "https://registry.yarnpkg.com/@fontsource/poppins/-/poppins-5.1.0.tgz#919205f53d99ec4751a945057ef525f06681df8a"
-  integrity sha512-tpLXlnNi2fwQjiipvuj4uNFHCdoLA8izRsKdoexZuEzjx0r/g1aKLf4ta6lFgF7L+/+AFdmaXFlUwwvmDzYH+g==
+"@fontsource/poppins@^5.1.1":
+  version "5.1.1"
+  resolved "https://registry.yarnpkg.com/@fontsource/poppins/-/poppins-5.1.1.tgz#fe7c25534d2f46bf296c37b68535d419913bc2c4"
+  integrity sha512-PQVKHGQOK+UpVNPzTFF9Z9ez3CIDkunfvRXGH95hiDoqWJc1shW4JFqe4tEoqnq7RtZaYrw9aWQq58L4eny5xg==
 
 "@humanwhocodes/config-array@^0.11.13":
   version "0.11.14"
