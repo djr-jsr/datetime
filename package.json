@@ -11,7 +11,7 @@
     "@fontsource/poppins": "^5.1.1",
     "@mui/icons-material": "^5.17.1",
     "@mui/material": "^5.16.14",
-    "@mui/system": "^6.4.6",
+    "@mui/system": "^7.0.1",
     "@mui/x-date-pickers": "^7.28.2",
     "@vvo/tzdb": "^6.161.0",
     "ahooks": "^3.8.4",
