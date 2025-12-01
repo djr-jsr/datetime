@@ -20,7 +20,7 @@
     "react-dom": "^18.3.1",
     "react-scripts": "^5.0.1",
     "typescript": "^5.8.2",
-    "web-vitals": "^4.2.4"
+    "web-vitals": "^5.1.0"
   },
   "scripts": {
     "prebuild": "node -p \"'export const LIB_VERSION = ' + JSON.stringify(require('./package.json').version) + ';'\" > src/version.ts",
