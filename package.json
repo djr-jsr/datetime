@@ -13,7 +13,7 @@
     "@mui/material": "^5.17.1",
     "@mui/system": "^7.0.1",
     "@mui/x-date-pickers": "^7.28.2",
-    "@vvo/tzdb": "^6.161.0",
+    "@vvo/tzdb": "^6.197.0",
     "ahooks": "^3.8.4",
     "luxon": "^3.6.1",
     "react": "^18.3.1",
